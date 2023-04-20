@@ -223,7 +223,7 @@ class lightgbmlss:
 
 
 
-    def hyper_opt(params, dtrain, dist, num_boost_round=500, nfold=10, early_stopping_rounds=20,
+    def hyper_opt(params, dtrain, dist, num_boost_round=500, folds=None, nfold=10, early_stopping_rounds=20,
                   max_minutes=10, n_trials = None, study_name = "LightGBMLSS-HyperOpt", silence=False):
         """Function to tune hyperparameters using optuna.
 
@@ -237,6 +237,12 @@ class lightgbmlss:
             Specifies distributional assumption.
         num_boost_round : int
             Number of boosting iterations.
+        folds : generator or iterator of (train_idx, test_idx) tuples, scikit-learn splitter object or None, optional (default=None)
+            If generator or iterator, it should yield the train and test indices for each fold.
+            If object, it should be one of the scikit-learn splitter classes
+            (https://scikit-learn.org/stable/modules/classes.html#splitter-classes)
+            and have ``split`` method.
+            This argument has highest priority over other data split arguments.
         nfold : int
             Number of folds in CV.
         early_stopping_rounds: int
@@ -319,6 +325,7 @@ class lightgbmlss:
                                                  dtrain,
                                                  dist,
                                                  num_boost_round=num_boost_round,
+                                                 folds=folds,
                                                  nfold=nfold,
                                                  callbacks=[pruning_callback, early_stopping_callback]
                                                  )
